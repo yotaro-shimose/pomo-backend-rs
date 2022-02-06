@@ -1,6 +1,7 @@
 use super::GmailAddress;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
+use std::fmt::Display;
 
 #[derive(Debug, Clone, Eq, PartialEq, Serialize, Deserialize)]
 pub struct UserId {
@@ -10,6 +11,12 @@ pub struct UserId {
 impl UserId {
     pub fn new(value: String) -> Self {
         Self { value }
+    }
+}
+
+impl Display for UserId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.value)
     }
 }
 
