@@ -1,26 +1,28 @@
-use crate::domain::model::value::{CalendarId, TaskListId, Token, UserId};
+use crate::domain::model::value::{Token, UserConfig, UserId};
+use actix_web::{error, Result};
 use serde::{Deserialize, Serialize};
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
     pub id: UserId,
     pub token: Token,
-    pub calendar_id: Option<CalendarId>,
-    pub task_list_id: Option<TaskListId>,
+    pub user_config: Option<UserConfig>,
 }
 
 impl User {
-    pub fn new(
-        id: UserId,
-        token: Token,
-        calendar_id: Option<CalendarId>,
-        task_list_id: Option<TaskListId>,
-    ) -> Self {
+    pub fn new(id: UserId, token: Token, user_config: Option<UserConfig>) -> Self {
         Self {
             id,
             token,
-            calendar_id,
-            task_list_id,
+            user_config,
         }
+    }
+
+    pub fn try_get_user_config(&self) -> Result<UserConfig> {
+        self.user_config.clone().ok_or_else(|| {
+            error::ErrorNotFound(format!(
+                "This User (Id: {}) Has Not Configured His Or Her Config",
+                self.id
+            ))
+        })
     }
 }

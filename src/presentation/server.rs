@@ -1,4 +1,4 @@
-use super::endpoint::{fetch_task, login};
+use super::endpoint::{fetch_task, fetch_user_config, login};
 use crate::domain::{
     model::value::AppState,
     repository::{DBRepository, GoogleRepository},
@@ -27,6 +27,7 @@ impl Server {
                 .wrap(Logger::default())
                 .route("/login", web::to(login::<G, U>))
                 .route("/task", web::to(fetch_task::<G, U>))
+                .route("/userConfig", web::to(fetch_user_config::<G, U>))
         })
         .bind("localhost:8000")?
         .run()

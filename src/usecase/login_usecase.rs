@@ -17,7 +17,7 @@ pub async fn login_usecase(
     let id = UserId::from(email);
     let user = db_repository.fetch_user(&id)?;
     if user.is_none() {
-        let user = User::new(id.clone(), token, None, None);
+        let user = User::new(id.clone(), token, None);
         db_repository.save_user(&user)?;
     }
     Ok(id)
