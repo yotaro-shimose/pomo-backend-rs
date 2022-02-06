@@ -48,8 +48,8 @@ impl Credential {
                 .await?;
 
             self.token = Token::new(
-                &refresh_response.access_token,
-                &self.token.refresh_token,
+                refresh_response.access_token,
+                self.token.refresh_token.clone(),
                 refresh_response.expiry_date,
             )
         }

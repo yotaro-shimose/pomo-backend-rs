@@ -8,10 +8,10 @@ pub struct Token {
 }
 
 impl Token {
-    pub fn new(access_token: &str, refresh_token: &str, expiry_date: DateTime<Utc>) -> Self {
+    pub fn new(access_token: String, refresh_token: String, expiry_date: DateTime<Utc>) -> Self {
         Self {
-            access_token: access_token.to_string(),
-            refresh_token: refresh_token.to_string(),
+            access_token,
+            refresh_token,
             expiry_date,
         }
     }

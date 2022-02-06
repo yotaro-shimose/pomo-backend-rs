@@ -5,9 +5,7 @@ pub struct Code {
 }
 
 impl Code {
-    pub fn new(value: &str) -> Self {
-        Self {
-            value: value.to_string(),
-        }
+    pub fn new(value: String) -> Self {
+        Self { value }
     }
 }

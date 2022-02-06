@@ -30,7 +30,7 @@ where
     G: GoogleRepository,
     U: DBRepository,
 {
-    let code = Code::new(&request.authorization_code);
+    let code = Code::new(request.authorization_code.clone());
     let google_repository = &state.google_repository;
     let db_repository = &state.db_repository;
     let user_id = login_usecase(&code, google_repository, db_repository).await?;

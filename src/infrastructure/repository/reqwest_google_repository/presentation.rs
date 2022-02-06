@@ -48,7 +48,7 @@ impl GoogleRepository for ReqwestGoogleRepository {
             .await?;
         let response: EmailResponse = builder.request_and_parse().await?;
         let string_address = response.email_addresses.into_iter().next().unwrap().value;
-        Ok(GmailAddress::new(&string_address))
+        Ok(GmailAddress::new(string_address))
     }
 }
 
