@@ -5,6 +5,7 @@ use crate::domain::{
 use crate::usecase::login_usecase;
 use actix_web::{web, HttpResponse, Result};
 use serde::{Deserialize, Serialize};
+
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct LoginRequest {

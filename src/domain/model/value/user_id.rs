@@ -7,6 +7,12 @@ pub struct UserId {
     pub value: String,
 }
 
+impl UserId {
+    pub fn new(value: String) -> Self {
+        Self { value }
+    }
+}
+
 impl From<GmailAddress> for UserId {
     fn from(addr: GmailAddress) -> Self {
         let id = hash_email(&addr.value);
