@@ -3,7 +3,7 @@ use super::domain::{
     service::{RequestAndParse, WithCredential},
 };
 use crate::domain::{
-    model::value::{ClientInfo, Code, GmailAddress, Token},
+    model::value::{ClientInfo, Code, GmailAddress, Task, TaskListId, Token},
     repository::GoogleRepository,
 };
 use actix_web::Result;
@@ -49,6 +49,10 @@ impl GoogleRepository for ReqwestGoogleRepository {
         let response: EmailResponse = builder.request_and_parse().await?;
         let string_address = response.email_addresses.into_iter().next().unwrap().value;
         Ok(GmailAddress::new(string_address))
+    }
+
+    async fn fetch_task(&self, token: &Token, task_list_id: &TaskListId) -> Result<Vec<Task>> {
+        todo!();
     }
 }
 
