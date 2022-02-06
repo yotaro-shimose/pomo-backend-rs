@@ -1,21 +1,21 @@
 use super::endpoint::login;
 use crate::domain::{
     model::value::AppState,
-    repository::{GoogleRepository, UserRepository},
+    repository::{DBRepository, GoogleRepository},
 };
 use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, App, HttpServer, Result};
 
 pub struct Server;
 impl Server {
-    pub async fn run<G: 'static, U: 'static>(app_state: &'static AppState<G, U>) -> Result<()>
+    pub async fn run<G, U>(app_state: AppState<G, U>) -> Result<()>
     where
-        G: GoogleRepository,
-        U: UserRepository,
+        G: GoogleRepository + 'static,
+        U: DBRepository + 'static,
     {
         std::env::set_var("RUST_LOG", "debug");
         env_logger::init();
-        HttpServer::new(|| {
+        HttpServer::new(move || {
             let data = web::Data::new(app_state.clone());
             let cors = Cors::default()
                 .allowed_origin("http://localhost:3000")

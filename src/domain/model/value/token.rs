@@ -8,13 +8,15 @@ pub struct Token {
 }
 
 impl Token {
+    pub fn new(access_token: &str, refresh_token: &str, expiry_date: DateTime<Utc>) -> Self {
+        Self {
+            access_token: access_token.to_string(),
+            refresh_token: refresh_token.to_string(),
+            expiry_date,
+        }
+    }
     pub fn is_valid(&self) -> bool {
         let now = Utc::now();
         now < self.expiry_date
-    }
-
-    pub fn update_token(&mut self, access_token: String, expiry_date: DateTime<Utc>) {
-        self.access_token = access_token;
-        self.expiry_date = expiry_date;
     }
 }

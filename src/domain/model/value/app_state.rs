@@ -1,25 +1,24 @@
-use crate::domain::repository::{GoogleRepository, UserRepository};
-use actix_web::Result;
+use crate::domain::repository::{DBRepository, GoogleRepository};
 
 #[derive(Debug, Clone)]
 pub struct AppState<G, U>
 where
-    G: GoogleRepository,
-    U: UserRepository,
+    G: GoogleRepository + 'static,
+    U: DBRepository + 'static,
 {
     pub google_repository: G,
-    pub user_repository: U,
+    pub db_repository: U,
 }
 
 impl<G, U> AppState<G, U>
 where
-    G: GoogleRepository,
-    U: UserRepository,
+    G: GoogleRepository + 'static,
+    U: DBRepository + 'static,
 {
-    pub fn new(google_repository: G, user_repository: U) -> Result<Self> {
-        Ok(Self {
+    pub fn new(google_repository: G, db_repository: U) -> Self {
+        Self {
             google_repository,
-            user_repository,
-        })
+            db_repository,
+        }
     }
 }

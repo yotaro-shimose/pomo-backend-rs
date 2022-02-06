@@ -1,11 +1,10 @@
+use super::model::{
+    entity::User,
+    value::{GmailAddress, UserId},
+};
 use crate::domain::model::value::{Code, Token};
 use actix_web::Result;
 use async_trait::async_trait;
-
-use super::model::{
-    entity::user::User,
-    value::{GmailAddress, UserId},
-};
 
 #[async_trait]
 pub trait GoogleRepository: Send + Sync + Clone {
@@ -13,8 +12,7 @@ pub trait GoogleRepository: Send + Sync + Clone {
     async fn fetch_gmail_address(&self, token: &Token) -> Result<GmailAddress>;
 }
 
-#[async_trait]
-pub trait UserRepository: Send + Sync + Clone {
-    fn fetch(&self, id: &UserId) -> Result<User>;
-    fn save(&self, user: &User) -> Result<()>;
+pub trait DBRepository: Send + Sync + Clone {
+    fn fetch_user(&self, id: &UserId) -> Result<Option<User>>;
+    fn save_user(&self, user: &User) -> Result<()>;
 }

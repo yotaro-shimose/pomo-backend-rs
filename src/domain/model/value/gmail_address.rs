@@ -5,7 +5,9 @@ pub struct GmailAddress {
 }
 
 impl GmailAddress {
-    pub fn new(value: String) -> Self {
-        Self { value }
+    pub fn new(value: &str) -> Self {
+        Self {
+            value: value.to_string(),
+        }
     }
 }
