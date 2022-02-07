@@ -1,7 +1,8 @@
 use super::usecase::{fetch_gmail_address_usecase, fetch_task_usecase, fetch_token_usecase};
 
+use crate::domain::model::entity::{Task, TaskList};
 use crate::domain::{
-    model::value::{ClientInfo, Code, GmailAddress, Task, TaskListId, Token},
+    model::value::{ClientInfo, Code, GmailAddress, TaskListId, Token},
     repository::GoogleRepository,
 };
 use actix_web::Result;
@@ -33,5 +34,9 @@ impl GoogleRepository for ReqwestGoogleRepository {
     async fn fetch_task(&self, token: &Token, task_list_id: &TaskListId) -> Result<Vec<Task>> {
         let tasks = fetch_task_usecase(token, task_list_id, &self.client_info).await?;
         Ok(tasks)
+    }
+
+    async fn fetch_task_list(&self, token: &Token) -> Result<Vec<TaskList>> {
+        todo!();
     }
 }

@@ -1,5 +1,8 @@
 use crate::{
-    domain::model::value::{ClientInfo, Task, TaskListId, Token},
+    domain::model::{
+        entity::Task,
+        value::{ClientInfo, TaskListId, Token},
+    },
     infrastructure::reqwest_google_repository::domain::{
         model::entity::Credential,
         service::{RequestAndParse, WithCredential},
