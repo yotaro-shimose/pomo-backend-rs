@@ -1,4 +1,6 @@
-use super::endpoint::{fetch_calendar, fetch_task, fetch_task_list, fetch_user_config, login};
+use super::endpoint::{
+    fetch_calendar, fetch_task, fetch_task_list, fetch_user_config, login, update_user_config,
+};
 use crate::domain::{
     model::value::AppState,
     repository::{DBRepository, GoogleRepository},
@@ -27,6 +29,7 @@ impl Server {
                 .route("/userConfig", web::get().to(fetch_user_config::<G, U>))
                 .route("/taskList", web::get().to(fetch_task_list::<G, U>))
                 .route("/calendar", web::get().to(fetch_calendar::<G, U>))
+                .route("user", web::put().to(update_user_config::<G, U>))
         })
         .bind("localhost:8000")?
         .run()

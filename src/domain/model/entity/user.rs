@@ -26,4 +26,8 @@ impl User {
             ))
         })
     }
+
+    pub fn update_config(&mut self, user_config: UserConfig) {
+        self.user_config = Some(user_config);
+    }
 }
