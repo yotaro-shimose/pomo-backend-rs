@@ -1,6 +1,7 @@
 use crate::domain::model::value::{Token, UserConfig, UserId};
 use actix_web::{error, Result};
 use serde::{Deserialize, Serialize};
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
     pub id: UserId,
