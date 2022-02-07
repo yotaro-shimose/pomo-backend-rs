@@ -34,6 +34,6 @@ fn hash_email(email: &str) -> String {
         .finalize()
         .to_vec()
         .iter()
-        .map(|&val| val as char)
+        .map(|&val| val.to_string())
         .collect()
 }

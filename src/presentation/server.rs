@@ -17,17 +17,14 @@ impl Server {
         env_logger::init();
         HttpServer::new(move || {
             let data = web::Data::new(app_state.clone());
-            let cors = Cors::default()
-                .allowed_origin("http://localhost:3000")
-                .allowed_methods(vec!["GET", "POST", "PUT"])
-                .allow_any_header();
+            let cors = Cors::permissive();
             App::new()
                 .app_data(data)
-                .wrap(cors)
                 .wrap(Logger::default())
-                .route("/login", web::to(login::<G, U>))
-                .route("/task", web::to(fetch_task::<G, U>))
-                .route("/userConfig", web::to(fetch_user_config::<G, U>))
+                .wrap(cors)
+                .route("/login", web::post().to(login::<G, U>))
+                .route("/task", web::get().to(fetch_task::<G, U>))
+                .route("/userConfig", web::get().to(fetch_user_config::<G, U>))
         })
         .bind("localhost:8000")?
         .run()
