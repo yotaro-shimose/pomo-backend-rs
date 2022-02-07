@@ -5,6 +5,7 @@ use crate::domain::{
 };
 use crate::usecase::fetch_task_usecase;
 use actix_web::{web, HttpResponse, Result};
+
 pub async fn fetch_task<G, U>(
     id_header: IdHeader,
     state: web::Data<AppState<G, U>>,

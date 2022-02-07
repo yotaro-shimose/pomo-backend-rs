@@ -17,7 +17,7 @@ struct FrontEndTaskList {
 impl From<TaskList> for FrontEndTaskList {
     fn from(task_list: TaskList) -> Self {
         Self {
-            id: task_list.id,
+            id: task_list.id.value,
             summary: task_list.name,
         }
     }
