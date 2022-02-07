@@ -1,7 +1,7 @@
 use actix_web::Result;
 use backend::domain::model::value::AppState;
-use backend::infrastructure::repository::reqwest_google_repository::ReqwestGoogleRepository;
-use backend::infrastructure::repository::sled_db_repository::SledDBRepository;
+use backend::infrastructure::reqwest_google_repository::ReqwestGoogleRepository;
+use backend::infrastructure::sled_db_repository::SledDBRepository;
 use backend::presentation::Server;
 
 #[actix_web::main]

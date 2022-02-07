@@ -1,6 +1,6 @@
 use crate::{
     domain::model::value::{ClientInfo, Task, TaskListId, Token},
-    infrastructure::repository::reqwest_google_repository::domain::{
+    infrastructure::reqwest_google_repository::domain::{
         model::entity::Credential,
         service::{RequestAndParse, WithCredential},
     },
