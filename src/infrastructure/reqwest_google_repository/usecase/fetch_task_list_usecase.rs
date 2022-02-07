@@ -1,6 +1,6 @@
 use crate::{
     domain::model::{
-        entity::Task,
+        entity::TaskList,
         value::{ClientInfo, TaskListId, Token},
     },
     infrastructure::reqwest_google_repository::domain::{
@@ -11,69 +11,57 @@ use crate::{
 use actix_web::Result;
 use serde::{Deserialize, Serialize};
 
+const GOOGLE_TASK_LIST_ENDPOINT: &str = "https://tasks.googleapis.com/tasks/v1/users/@me/lists";
+
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
-struct TaskQuery {
-    max_result: u8,
-    show_completed: bool,
+struct TaskListQuery {
+    max_results: u8,
 }
 
-impl TaskQuery {
+impl TaskListQuery {
     fn new() -> Self {
-        Self {
-            max_result: 100,
-            show_completed: false,
-        }
+        Self { max_results: 100 }
     }
 }
 
 #[derive(Debug, Deserialize)]
-struct TaskResponse {
-    resource: Tasks,
+struct TaskListResponse {
+    items: Vec<RawTaskList>,
 }
 
 #[derive(Debug, Deserialize)]
-struct Tasks {
-    items: Vec<RawTask>,
-}
-
-#[derive(Debug, Deserialize)]
-struct RawTask {
+struct RawTaskList {
     id: String,
     title: String,
 }
 
-impl From<RawTask> for Task {
-    fn from(raw: RawTask) -> Self {
+impl From<RawTaskList> for TaskList {
+    fn from(raw: RawTaskList) -> Self {
         Self {
-            id: raw.id,
+            id: TaskListId::new(raw.id),
             name: raw.title,
         }
     }
 }
 
-pub async fn fetch_task_usecase(
+pub async fn fetch_task_list_usecase(
     token: &Token,
-    task_list_id: &TaskListId,
     client_info: &ClientInfo,
-) -> Result<Vec<Task>> {
+) -> Result<Vec<TaskList>> {
     let mut credential = Credential::new(token, client_info);
-    let endpoint = format!(
-        "https://tasks.googleapis.com/tasks/v1/lists/{}/tasks",
-        task_list_id.value
-    );
-    let query = TaskQuery::new();
+    let query = TaskListQuery::new();
     let builder = reqwest::Client::new()
-        .get(endpoint)
+        .get(GOOGLE_TASK_LIST_ENDPOINT)
         .query(&query)
         .with_credential(&mut credential)
         .await?;
-    let response: TaskResponse = builder.request_and_parse().await?;
-    let tasks = response
-        .resource
+    let response: TaskListResponse = builder.request_and_parse().await?;
+    let task_lists = response
         .items
         .into_iter()
         .map(|raw| raw.into())
-        .collect::<Vec<Task>>();
-    Ok(tasks)
+        .collect::<Vec<TaskList>>();
+    println!("{:?}", task_lists);
+    Ok(task_lists)
 }

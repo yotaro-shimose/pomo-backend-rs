@@ -50,7 +50,7 @@ impl Credential {
             self.token = Token::new(
                 refresh_response.access_token,
                 self.token.refresh_token.clone(),
-                refresh_response.expiry_date,
+                refresh_response.expires_in,
             )
         }
         Ok(())
@@ -61,7 +61,7 @@ impl Credential {
 struct RefreshResponse {
     access_token: String,
     #[serde(deserialize_with = "from_remainder")]
-    expiry_date: DateTime<Utc>,
+    expires_in: DateTime<Utc>,
 }
 
 fn from_remainder<'de, D>(deserializer: D) -> Result<DateTime<Utc>, D::Error>
