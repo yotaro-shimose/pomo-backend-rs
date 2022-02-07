@@ -1,5 +1,5 @@
 use super::model::{
-    entity::{Task, TaskList, User},
+    entity::{Calendar, Task, TaskList, User},
     value::{GmailAddress, TaskListId, UserId},
 };
 use crate::domain::model::value::{Code, Token};
@@ -12,6 +12,7 @@ pub trait GoogleRepository: Send + Sync + Clone {
     async fn fetch_gmail_address(&self, token: &Token) -> Result<GmailAddress>;
     async fn fetch_task(&self, token: &Token, task_list_id: &TaskListId) -> Result<Vec<Task>>;
     async fn fetch_task_list(&self, token: &Token) -> Result<Vec<TaskList>>;
+    async fn fetch_calendar(&self, token: &Token) -> Result<Vec<Calendar>>;
 }
 
 pub trait DBRepository: Send + Sync + Clone {
