@@ -29,11 +29,6 @@ impl TaskQuery {
 
 #[derive(Debug, Deserialize)]
 struct TaskResponse {
-    resource: Tasks,
-}
-
-#[derive(Debug, Deserialize)]
-struct Tasks {
     items: Vec<RawTask>,
 }
 
@@ -70,7 +65,6 @@ pub async fn fetch_task_usecase(
         .await?;
     let response: TaskResponse = builder.request_and_parse().await?;
     let tasks = response
-        .resource
         .items
         .into_iter()
         .map(|raw| raw.into())
