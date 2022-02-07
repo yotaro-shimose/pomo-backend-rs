@@ -8,6 +8,7 @@ use actix_web::{web, HttpResponse, Result};
 use serde::Serialize;
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 struct FrontEndUserConfig {
     task_list_id: Option<String>,
     calendar_id: Option<String>,
@@ -38,7 +39,7 @@ where
 {
     let id = UserId::new(id_header.id);
     let db_repository = &state.db_repository;
-    let response = fetch_user_config_usecase(&id, db_repository).await?;
-
+    let user_config = fetch_user_config_usecase(&id, db_repository).await?;
+    let response: FrontEndUserConfig = user_config.into();
     Ok(HttpResponse::Ok().json(response))
 }

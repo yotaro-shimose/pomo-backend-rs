@@ -1,8 +1,9 @@
 use super::usecase::{
-    fetch_gmail_address_usecase, fetch_task_list_usecase, fetch_task_usecase, fetch_token_usecase,
+    fetch_calendar_usecase, fetch_gmail_address_usecase, fetch_task_list_usecase,
+    fetch_task_usecase, fetch_token_usecase,
 };
 
-use crate::domain::model::entity::{Task, TaskList};
+use crate::domain::model::entity::{Calendar, Task, TaskList};
 use crate::domain::{
     model::value::{ClientInfo, Code, GmailAddress, TaskListId, Token},
     repository::GoogleRepository,
@@ -41,5 +42,10 @@ impl GoogleRepository for ReqwestGoogleRepository {
     async fn fetch_task_list(&self, token: &Token) -> Result<Vec<TaskList>> {
         let task_lists = fetch_task_list_usecase(token, &self.client_info).await?;
         Ok(task_lists)
+    }
+
+    async fn fetch_calendar(&self, token: &Token) -> Result<Vec<Calendar>> {
+        let calendars = fetch_calendar_usecase(token, &self.client_info).await?;
+        Ok(calendars)
     }
 }
