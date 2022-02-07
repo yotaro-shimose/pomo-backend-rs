@@ -1,7 +1,7 @@
 use crate::{
     domain::model::{
-        entity::TaskList,
-        value::{ClientInfo, TaskListId, Token},
+        entity::Calendar,
+        value::{CalendarId, ClientInfo, Token},
     },
     infrastructure::reqwest_google_repository::domain::{
         model::entity::Credential,
@@ -11,56 +11,61 @@ use crate::{
 use actix_web::Result;
 use serde::{Deserialize, Serialize};
 
-const GOOGLE_TASK_LIST_ENDPOINT: &str = "https://tasks.googleapis.com/tasks/v1/users/@me/lists";
+const GOOGLE_CALENDAR_ENDPOINT: &str =
+    "https://www.googleapis.com/calendar/v3/users/me/calendarList";
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
-struct TaskListQuery {
+struct CalendarQuery {
     max_results: u8,
+    show_hidden: bool,
 }
 
-impl TaskListQuery {
+impl CalendarQuery {
     fn new() -> Self {
-        Self { max_results: 100 }
-    }
-}
-
-#[derive(Debug, Deserialize)]
-struct TaskListResponse {
-    items: Vec<RawTaskList>,
-}
-
-#[derive(Debug, Deserialize)]
-struct RawTaskList {
-    id: String,
-    title: String,
-}
-
-impl From<RawTaskList> for TaskList {
-    fn from(raw: RawTaskList) -> Self {
         Self {
-            id: TaskListId::new(raw.id),
-            name: raw.title,
+            max_results: 100,
+            show_hidden: true,
         }
     }
 }
 
-pub async fn fetch_task_list_usecase(
+#[derive(Debug, Deserialize)]
+struct CalendarResponse {
+    items: Vec<RawCalendar>,
+}
+
+#[derive(Debug, Deserialize)]
+struct RawCalendar {
+    id: String,
+    summary: String,
+}
+
+impl From<RawCalendar> for Calendar {
+    fn from(raw: RawCalendar) -> Self {
+        Self {
+            id: CalendarId::new(raw.id),
+            name: raw.summary,
+        }
+    }
+}
+
+pub async fn fetch_calendar_usecase(
     token: &Token,
     client_info: &ClientInfo,
-) -> Result<Vec<TaskList>> {
+) -> Result<Vec<Calendar>> {
     let mut credential = Credential::new(token, client_info);
-    let query = TaskListQuery::new();
+    let query = CalendarQuery::new();
     let builder = reqwest::Client::new()
-        .get(GOOGLE_TASK_LIST_ENDPOINT)
+        .get(GOOGLE_CALENDAR_ENDPOINT)
         .query(&query)
         .with_credential(&mut credential)
         .await?;
-    let response: TaskListResponse = builder.request_and_parse().await?;
+    let response: CalendarResponse = builder.request_and_parse().await?;
     let task_lists = response
         .items
         .into_iter()
         .map(|raw| raw.into())
-        .collect::<Vec<TaskList>>();
+        .collect::<Vec<Calendar>>();
     Ok(task_lists)
 }

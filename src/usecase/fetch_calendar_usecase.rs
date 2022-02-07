@@ -5,7 +5,7 @@ use crate::domain::{
 };
 use actix_web::{error, Result};
 
-pub async fn fetch_task_list_usecase(
+pub async fn fetch_calendar_usecase(
     id: &UserId,
     google_repository: &impl GoogleRepository,
     db_repository: &impl DBRepository,
