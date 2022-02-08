@@ -1,9 +1,9 @@
 use super::model::{
     entity::{Calendar, Task, TaskList, User},
-    value::{GmailAddress, TaskListId, UserId},
+    value::{CalendarId, Event, GmailAddress, TaskListId, UserId},
 };
 use crate::domain::model::value::{Code, Token};
-use actix_web::Result;
+use actix_web::{error, Result};
 use async_trait::async_trait;
 
 #[async_trait]
@@ -13,9 +13,15 @@ pub trait GoogleRepository: Send + Sync + Clone {
     async fn fetch_task(&self, token: &Token, task_list_id: &TaskListId) -> Result<Vec<Task>>;
     async fn fetch_task_list(&self, token: &Token) -> Result<Vec<TaskList>>;
     async fn fetch_calendar(&self, token: &Token) -> Result<Vec<Calendar>>;
+    async fn push_event(&self, event: Event, token: &Token, calendar_id: &CalendarId)
+        -> Result<()>;
 }
 
 pub trait DBRepository: Send + Sync + Clone {
     fn fetch_user(&self, id: &UserId) -> Result<Option<User>>;
     fn save_user(&self, user: &User) -> Result<()>;
+    fn retrieve_user(&self, id: &UserId) -> Result<User> {
+        self.fetch_user(id)?
+            .ok_or_else(|| error::ErrorNotFound(format!("No User Matched Id {}", id)))
+    }
 }

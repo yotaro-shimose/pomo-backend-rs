@@ -1,5 +1,6 @@
 use super::endpoint::{
-    fetch_calendar, fetch_task, fetch_task_list, fetch_user_config, login, update_user_config,
+    fetch_calendar, fetch_task, fetch_task_list, fetch_user_config, login, push_event,
+    update_user_config,
 };
 use crate::domain::{
     model::value::AppState,
@@ -29,7 +30,8 @@ impl Server {
                 .route("/userConfig", web::get().to(fetch_user_config::<G, U>))
                 .route("/taskList", web::get().to(fetch_task_list::<G, U>))
                 .route("/calendar", web::get().to(fetch_calendar::<G, U>))
-                .route("user", web::put().to(update_user_config::<G, U>))
+                .route("/user", web::put().to(update_user_config::<G, U>))
+                .route("/event", web::post().to(push_event::<G, U>))
         })
         .bind("localhost:8000")?
         .run()

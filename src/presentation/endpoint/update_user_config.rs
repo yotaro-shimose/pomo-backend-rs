@@ -1,3 +1,4 @@
+use super::super::SuccessResponse;
 use super::IdHeader;
 use crate::domain::{
     model::value::{AppState, CalendarId, TaskListId, UserConfig, UserId},
@@ -5,22 +6,13 @@ use crate::domain::{
 };
 use crate::usecase::update_user_config_usecase;
 use actix_web::{error, web, HttpResponse, Result};
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FrontEndUserConfig {
     task_list_id: Option<String>,
     calendar_id: Option<String>,
-}
-
-#[derive(Serialize)]
-struct UpdateUserConfigResponse {}
-
-impl UpdateUserConfigResponse {
-    fn new() -> Self {
-        Self {}
-    }
 }
 
 fn try_convert(raw: FrontEndUserConfig) -> Option<UserConfig> {
@@ -48,5 +40,5 @@ where
     let user_config = try_convert(raw_config.0)
         .ok_or_else(|| error::ErrorBadRequest("No User Config Specified"))?;
     update_user_config_usecase(&id, user_config, db_repository).await?;
-    Ok(HttpResponse::Ok().json(UpdateUserConfigResponse::new()))
+    Ok(HttpResponse::Ok().json(SuccessResponse::new()))
 }
