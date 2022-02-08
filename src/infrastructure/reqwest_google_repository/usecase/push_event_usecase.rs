@@ -11,6 +11,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize)]
 struct PushEventBody {
+    summary: String,
     start: Time,
     end: Time,
 }
@@ -28,9 +29,14 @@ impl Time {
 
 impl From<Event> for PushEventBody {
     fn from(event: Event) -> Self {
+        let title = event.task.name;
         let start = Time::new(event.start);
         let end = Time::new(event.end);
-        Self { start, end }
+        Self {
+            summary: title,
+            start,
+            end,
+        }
     }
 }
 
