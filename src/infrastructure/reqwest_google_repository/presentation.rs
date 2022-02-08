@@ -1,11 +1,11 @@
 use super::usecase::{
     fetch_calendar_usecase, fetch_gmail_address_usecase, fetch_task_list_usecase,
-    fetch_task_usecase, fetch_token_usecase,
+    fetch_task_usecase, fetch_token_usecase, push_event_usecase,
 };
 
 use crate::domain::model::entity::{Calendar, Task, TaskList};
 use crate::domain::{
-    model::value::{ClientInfo, Code, GmailAddress, TaskListId, Token},
+    model::value::{CalendarId, ClientInfo, Code, Event, GmailAddress, TaskListId, Token},
     repository::GoogleRepository,
 };
 use actix_web::Result;
@@ -47,5 +47,15 @@ impl GoogleRepository for ReqwestGoogleRepository {
     async fn fetch_calendar(&self, token: &Token) -> Result<Vec<Calendar>> {
         let calendars = fetch_calendar_usecase(token, &self.client_info).await?;
         Ok(calendars)
+    }
+
+    async fn push_event(
+        &self,
+        event: Event,
+        token: &Token,
+        calendar_id: &CalendarId,
+    ) -> Result<()> {
+        push_event_usecase(event, token, calendar_id, &self.client_info).await?;
+        Ok(())
     }
 }
