@@ -27,6 +27,10 @@ impl User {
         })
     }
 
+    pub fn update_token(&mut self, token: Token) {
+        self.token = token;
+    }
+
     pub fn update_config(&mut self, user_config: UserConfig) {
         self.user_config = Some(user_config);
     }
