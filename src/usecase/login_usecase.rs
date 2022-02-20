@@ -11,13 +11,13 @@ pub async fn login_usecase(
     let token = google_repository.fetch_token(code).await?;
     let email = google_repository.fetch_gmail_address(&token).await?;
     let id = UserId::from(email);
-    let user = db_repository.fetch_user(&id)?;
+    let user = db_repository.fetch_user(&id).await?;
     if let Some(mut user) = user {
         user.update_token(token);
-        db_repository.save_user(&user)?;
+        db_repository.save_user(&user).await?;
     } else {
         let user = User::new(id.clone(), token, None);
-        db_repository.save_user(&user)?;
+        db_repository.save_user(&user).await?;
     }
     Ok(id)
 }

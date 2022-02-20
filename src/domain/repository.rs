@@ -17,11 +17,13 @@ pub trait GoogleRepository: Send + Sync + Clone {
         -> Result<()>;
 }
 
+#[async_trait]
 pub trait DBRepository: Send + Sync + Clone {
-    fn fetch_user(&self, id: &UserId) -> Result<Option<User>>;
-    fn save_user(&self, user: &User) -> Result<()>;
-    fn retrieve_user(&self, id: &UserId) -> Result<User> {
-        self.fetch_user(id)?
+    async fn fetch_user(&self, id: &UserId) -> Result<Option<User>>;
+    async fn save_user(&self, user: &User) -> Result<()>;
+    async fn retrieve_user(&self, id: &UserId) -> Result<User> {
+        self.fetch_user(id)
+            .await?
             .ok_or_else(|| error::ErrorNotFound(format!("No User Matched Id {}", id)))
     }
 }

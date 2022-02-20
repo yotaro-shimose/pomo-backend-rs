@@ -8,7 +8,6 @@ use crate::domain::{
 };
 use actix_cors::Cors;
 use actix_web::{middleware::Logger, web, App, HttpServer, Result};
-
 pub struct Server;
 impl Server {
     pub async fn run<G, U>(app_state: AppState<G, U>) -> Result<()>
@@ -18,7 +17,7 @@ impl Server {
     {
         std::env::set_var("RUST_LOG", "debug");
         env_logger::init();
-        HttpServer::new(move || {
+        let factory = move || {
             let data = web::Data::new(app_state.clone());
             let cors = Cors::permissive();
             App::new()
@@ -32,10 +31,12 @@ impl Server {
                 .route("/calendar", web::get().to(fetch_calendar::<G, U>))
                 .route("/user", web::put().to(update_user_config::<G, U>))
                 .route("/event", web::post().to(push_event::<G, U>))
-        })
-        .bind("localhost:8000")?
-        .run()
-        .await?;
+        };
+
+        HttpServer::new(factory)
+            .bind("localhost:8000")?
+            .run()
+            .await?;
         Ok(())
     }
 }
