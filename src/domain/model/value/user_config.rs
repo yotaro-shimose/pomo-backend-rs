@@ -1,7 +1,7 @@
 use crate::domain::model::value::{CalendarId, TaskListId};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Eq, PartialEq)]
 pub struct UserConfig {
     pub task_list_id: TaskListId,
     pub calendar_id: CalendarId,
