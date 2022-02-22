@@ -30,4 +30,8 @@ impl DBRepository for DynamoDBRepository {
         let user_id = &user.id;
         table.create(user_id, user).await
     }
+    async fn delete_user(&self, id: &UserId) -> Result<()> {
+        let table = UserTable::new(&self.client);
+        table.delete(id).await
+    }
 }

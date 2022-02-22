@@ -26,4 +26,5 @@ pub trait DBRepository: Send + Sync + Clone {
             .await?
             .ok_or_else(|| error::ErrorNotFound(format!("No User Matched Id {}", id)))
     }
+    async fn delete_user(&self, id: &UserId) -> Result<()>;
 }

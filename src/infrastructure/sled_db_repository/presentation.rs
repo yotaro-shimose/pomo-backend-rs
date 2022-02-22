@@ -6,6 +6,7 @@ use sled::Db;
 
 use super::domain::model::interface::SledIO;
 use super::domain::model::value::UserTable;
+
 const DB_PATH: &str = "database";
 
 #[derive(Debug, Clone)]
@@ -30,5 +31,9 @@ impl DBRepository for SledDBRepository {
         let user_table = UserTable::new(&self.db);
         let id = &user.id;
         user_table.save(id, user)
+    }
+    async fn delete_user(&self, id: &UserId) -> Result<()> {
+        let user_table = UserTable::new(&self.db);
+        user_table.delete(id)
     }
 }

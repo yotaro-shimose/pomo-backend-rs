@@ -37,4 +37,15 @@ pub trait SledIO {
             None => Ok(None),
         }
     }
+
+    fn delete(&self, key: &Self::SledKey) -> Result<()> {
+        let db = self.get_db();
+        let byte_key = key.as_ref();
+        db.open_tree(Self::TABLE_NAME)
+            .map_err(error::ErrorInternalServerError)?
+            .remove(byte_key)
+            .map_err(error::ErrorInternalServerError)?
+            .ok_or_else(|| error::ErrorInternalServerError("Data did not exists"))?;
+        Ok(())
+    }
 }

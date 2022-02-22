@@ -1,6 +1,6 @@
 use actix_web::{error, Result};
 use async_trait::async_trait;
-use aws_sdk_dynamodb::model::{AttributeAction, AttributeValue, AttributeValueUpdate};
+use aws_sdk_dynamodb::model::{AttributeAction, AttributeValue, AttributeValueUpdate, ReturnValue};
 use aws_sdk_dynamodb::Client;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -78,13 +78,16 @@ pub trait DynamoDBTable {
     async fn delete(&self, key: &Self::Key) -> Result<()> {
         let client = self.get_client();
         let dynamo_key = key.to_string();
-        client
+        let ret = client
             .delete_item()
+            .return_values(ReturnValue::AllOld)
             .table_name(Self::TABLE_NAME)
             .key(KEY, AttributeValue::S(dynamo_key))
             .send()
             .await
             .map_err(error::ErrorInternalServerError)?;
-        Ok(())
+        ret.attributes
+            .map(|_| ())
+            .ok_or_else(|| error::ErrorInternalServerError("Data did not exists"))
     }
 }
