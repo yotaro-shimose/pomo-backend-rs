@@ -7,7 +7,7 @@ use sled::Db;
 use super::domain::model::interface::SledIO;
 use super::domain::model::value::UserTable;
 
-const DB_PATH: &str = "database";
+const DB_PATH: &str = "sleddb";
 
 #[derive(Debug, Clone)]
 pub struct SledDBRepository {

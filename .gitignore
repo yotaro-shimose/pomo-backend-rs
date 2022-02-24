@@ -1,5 +1,4 @@
 /target
-/database
 /google_auth
 .vscode
 Cargo.lock

@@ -1,17 +1,15 @@
 use actix_web::Result;
-use backend::{
-    domain::{
-        model::{
-            entity::User,
-            value::{CalendarId, TaskListId, Token, UserConfig, UserId},
-        },
-        repository::DBRepository,
-    },
-    infrastructure::{
-        dynamo_db_repository::DynamoDBRepository, sled_db_repository::SledDBRepository,
-    },
-};
 use chrono::Utc;
+use domain::{
+    model::{
+        entity::User,
+        value::{CalendarId, TaskListId, Token, UserConfig, UserId},
+    },
+    repository::DBRepository,
+};
+use infrastructure::{
+    dynamo_db_repository::DynamoDBRepository, sled_db_repository::SledDBRepository,
+};
 use rstest::*;
 use std::future::Future;
 
