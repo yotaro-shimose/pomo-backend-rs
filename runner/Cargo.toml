@@ -10,3 +10,7 @@ domain = { path = "../domain" }
 presentation = { path = "../presentation" }
 infrastructure = { path = "../infrastructure" }
 actix-web = "4.0.0-rc.2"
+
+[[bin]]
+name = "actix_server"
+path = "src/actix_server.rs"
