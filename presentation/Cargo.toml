@@ -9,8 +9,11 @@ edition = "2021"
 domain = { path = "../domain" }
 usecase = { path = "../usecase" }
 serde = { version = "1.0", features = ["derive"] }
+serde_json = "1"
 chrono = { version = "0.4", features = ["serde"] }
 actix-cors = "0.6.0-beta.1"
 env_logger = "0.9"
 actix-web = "4.0.0-rc.2"
 futures-util = "0.3.21"
+lambda_runtime = "0.5"
+lambda_http = "0.5"
