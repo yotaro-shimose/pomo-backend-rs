@@ -23,3 +23,7 @@ path = "src/actix_server.rs"
 [[bin]]
 name = "fetch_calendar"
 path = "src/lambda/fetch_calendar.rs"
+
+[[bin]]
+name = "login"
+path = "src/lambda/login.rs"

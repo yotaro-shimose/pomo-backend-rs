@@ -39,7 +39,7 @@ def create_lambda_function(function_name: str):
         f"""
 aws lambda create-function --function-name {function_name} \
 --handler doesnt.matter \
---zip-file fileb://./lambda.zip \
+--zip-file fileb://./{function_name}.zip \
 --runtime provided.al2 \
 --role arn:aws:iam::{AWS_ACCOUNT_ID}:role/service-role/{AWS_EXECUTION_ROLE} \
 --environment Variables={{RUST_BACKTRACE=1,CLIENT_ID={CLIENT_ID},CLIENT_SECRET={CLIENT_SECRET},TOKEN_URI={TOKEN_URI},AUTH_URI={AUTH_URI}}} \
