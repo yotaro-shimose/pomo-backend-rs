@@ -1,5 +1,4 @@
-use super::extract_id;
-use crate::lambda_server::LambdaServerError;
+use crate::lambda_server::{extract_id, LambdaServerError};
 use domain::{
     model::value::AppState,
     repository::{DBRepository, GoogleRepository},
