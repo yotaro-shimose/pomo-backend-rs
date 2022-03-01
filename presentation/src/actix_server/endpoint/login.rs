@@ -1,27 +1,10 @@
+use crate::domain::{LoginRequest, LoginResponse};
 use actix_web::{web, HttpResponse, Result};
 use domain::{
-    model::value::{AppState, Code, UserId},
+    model::value::{AppState, Code},
     repository::{DBRepository, GoogleRepository},
 };
-use serde::{Deserialize, Serialize};
 use usecase::login_usecase;
-
-#[derive(Debug, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct LoginRequest {
-    authorization_code: String,
-}
-
-#[derive(Debug, Serialize)]
-struct LoginResponse {
-    id: String,
-}
-
-impl LoginResponse {
-    fn new(user_id: UserId) -> Self {
-        Self { id: user_id.value }
-    }
-}
 
 pub async fn login<G, U>(
     request: web::Json<LoginRequest>,

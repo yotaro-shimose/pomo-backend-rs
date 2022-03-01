@@ -1,16 +1,16 @@
 use crate::{
-    domain::FrontEndCalendar,
-    lambda_server::{extract_id, LambdaServerError},
+    domain::{LoginRequest, LoginResponse},
+    lambda_server::{parse_body, LambdaServerError},
 };
 use domain::{
-    model::value::AppState,
+    model::value::{AppState, Code},
     repository::{DBRepository, GoogleRepository},
 };
 use lambda_http::{self, Error, Request, Response};
 use std::sync::Arc;
-use usecase::fetch_calendar_usecase;
+use usecase::login_usecase;
 
-pub async fn fetch_calendar<G, U>(req: Request) -> Result<Response<String>, Error>
+pub async fn login<G, U>(req: Request) -> Result<Response<String>, Error>
 where
     G: GoogleRepository + 'static,
     U: DBRepository + 'static,
@@ -23,14 +23,13 @@ where
         })?;
     let google_repository = &state.google_repository;
     let db_repository = &state.db_repository;
-    let id = extract_id(&req)?;
-    let calendars = fetch_calendar_usecase(&id, google_repository, db_repository)
+    let body = req.body();
+    let login_request = parse_body::<LoginRequest>(body)?;
+    let code = Code::from(login_request);
+    let user_id = login_usecase(&code, google_repository, db_repository)
         .await
-        .map_err(|err| err.to_string())?
-        .into_iter()
-        .map(|val| val.into())
-        .collect::<Vec<FrontEndCalendar>>();
-    let body = serde_json::to_string(&calendars)
         .map_err(|err| LambdaServerError::InternalServerError(err.to_string()))?;
-    Ok(Response::new(body))
+    let login_response = LoginResponse::new(user_id);
+    let response_body = serde_json::to_string(&login_response)?;
+    Ok(Response::new(response_body))
 }

@@ -1,27 +1,12 @@
+use crate::domain::FrontEndCalendar;
+
 use super::IdHeader;
 use actix_web::{web, HttpResponse, Result};
-use domain::model::entity::Calendar;
 use domain::{
     model::value::{AppState, UserId},
     repository::{DBRepository, GoogleRepository},
 };
-use serde::Serialize;
 use usecase::fetch_calendar_usecase;
-
-#[derive(Debug, Serialize)]
-struct FrontEndCalendar {
-    id: String,
-    summary: String,
-}
-
-impl From<Calendar> for FrontEndCalendar {
-    fn from(calendar: Calendar) -> Self {
-        Self {
-            id: calendar.id.value,
-            summary: calendar.name,
-        }
-    }
-}
 
 pub async fn fetch_calendar<G, U>(
     id_header: IdHeader,
