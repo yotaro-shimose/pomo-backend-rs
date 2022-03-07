@@ -1,5 +1,5 @@
 pub mod endpoint;
 pub mod server;
 pub use server::Server;
-mod success_response;
-use success_response::SuccessResponse;
+mod id_header;
+pub(self) use id_header::IdHeader;

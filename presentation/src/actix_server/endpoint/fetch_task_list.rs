@@ -1,27 +1,12 @@
-use super::IdHeader;
+use crate::domain::FrontEndTaskList;
+
+use crate::actix_server::IdHeader;
 use actix_web::{web, HttpResponse, Result};
-use domain::model::entity::TaskList;
 use domain::{
     model::value::{AppState, UserId},
     repository::{DBRepository, GoogleRepository},
 };
-use serde::Serialize;
 use usecase::fetch_task_list_usecase;
-
-#[derive(Debug, Serialize)]
-struct FrontEndTaskList {
-    id: String,
-    summary: String,
-}
-
-impl From<TaskList> for FrontEndTaskList {
-    fn from(task_list: TaskList) -> Self {
-        Self {
-            id: task_list.id.value,
-            summary: task_list.name,
-        }
-    }
-}
 
 pub async fn fetch_task_list<G, U>(
     id_header: IdHeader,

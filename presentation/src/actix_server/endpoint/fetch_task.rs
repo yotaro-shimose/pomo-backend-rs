@@ -1,4 +1,4 @@
-use super::IdHeader;
+use crate::actix_server::IdHeader;
 use actix_web::{web, HttpResponse, Result};
 use domain::{
     model::value::{AppState, UserId},

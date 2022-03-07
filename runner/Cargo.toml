@@ -10,7 +10,6 @@ domain = { path = "../domain" }
 presentation = { path = "../presentation" }
 infrastructure = { path = "../infrastructure" }
 actix-web = "4.0.0-rc.2"
-futures-util = "0.3.21"
 lambda_http = "0.5"
 serde_json = "1"
 tower-http = { version = "0.2.3", features = ["add-extension", "cors"] }
@@ -28,3 +27,15 @@ path = "src/lambda/fetch_calendar.rs"
 [[bin]]
 name = "login"
 path = "src/lambda/login.rs"
+
+[[bin]]
+name = "fetch_task_list"
+path = "src/lambda/fetch_task_list.rs"
+
+[[bin]]
+name = "fetch_user_config"
+path = "src/lambda/fetch_user_config.rs"
+
+[[bin]]
+name = "update_user_config"
+path = "src/lambda/update_user_config.rs"

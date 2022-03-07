@@ -1,5 +1,5 @@
 use crate::{
-    domain::FrontEndCalendar,
+    domain::FrontEndTaskList,
     lambda_server::{extract_id, log_response, LambdaServerError},
 };
 use domain::{
@@ -8,19 +8,19 @@ use domain::{
 };
 use lambda_http::{self, Error, Request, Response};
 use std::sync::Arc;
-use usecase::fetch_calendar_usecase;
+use usecase::fetch_task_list_usecase;
 
-pub async fn fetch_calendar<G, U>(req: Request) -> Result<Response<String>, Error>
+pub async fn fetch_task_list<G, U>(req: Request) -> Result<Response<String>, Error>
 where
     G: GoogleRepository + 'static,
     U: DBRepository + 'static,
 {
-    let ret = fetch_calendar_inner::<G, U>(req).await;
+    let ret = fetch_task_list_inner::<G, U>(req).await;
     log_response(&ret);
     ret
 }
 
-async fn fetch_calendar_inner<G, U>(req: Request) -> Result<Response<String>, Error>
+async fn fetch_task_list_inner<G, U>(req: Request) -> Result<Response<String>, Error>
 where
     G: GoogleRepository + 'static,
     U: DBRepository + 'static,
@@ -34,13 +34,13 @@ where
     let google_repository = &state.google_repository;
     let db_repository = &state.db_repository;
     let id = extract_id(&req)?;
-    let calendars = fetch_calendar_usecase(&id, google_repository, db_repository)
+    let task_lists = fetch_task_list_usecase(&id, google_repository, db_repository)
         .await
         .map_err(|err| err.to_string())?
         .into_iter()
         .map(|val| val.into())
-        .collect::<Vec<FrontEndCalendar>>();
-    let body = serde_json::to_string(&calendars)
+        .collect::<Vec<FrontEndTaskList>>();
+    let body = serde_json::to_string(&task_lists)
         .map_err(|err| LambdaServerError::InternalServerError(err.to_string()))?;
     Ok(Response::new(body))
 }

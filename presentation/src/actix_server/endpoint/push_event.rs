@@ -1,5 +1,5 @@
-use super::super::SuccessResponse;
-use super::IdHeader;
+use crate::actix_server::IdHeader;
+use crate::domain::SuccessResponse;
 use actix_web::{web, HttpResponse, Result};
 use chrono::{DateTime, Local, TimeZone, Utc};
 use domain::model::entity::Task;
