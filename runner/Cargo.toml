@@ -1,0 +1,49 @@
+[package]
+name = "runner"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+domain = { path = "../domain" }
+presentation = { path = "../presentation" }
+infrastructure = { path = "../infrastructure" }
+actix-web = "4.0.0-rc.2"
+lambda_http = "0.5"
+serde_json = "1"
+tower-http = { version = "0.2.3", features = ["add-extension", "cors"] }
+env_logger = "0.9"
+http = "0.2.6"
+
+[[bin]]
+name = "actix_server"
+path = "src/actix_server.rs"
+
+[[bin]]
+name = "fetch_calendar"
+path = "src/lambda/fetch_calendar.rs"
+
+[[bin]]
+name = "login"
+path = "src/lambda/login.rs"
+
+[[bin]]
+name = "fetch_task_list"
+path = "src/lambda/fetch_task_list.rs"
+
+[[bin]]
+name = "fetch_user_config"
+path = "src/lambda/fetch_user_config.rs"
+
+[[bin]]
+name = "update_user_config"
+path = "src/lambda/update_user_config.rs"
+
+[[bin]]
+name = "fetch_task"
+path = "src/lambda/fetch_task.rs"
+
+[[bin]]
+name = "push_event"
+path = "src/lambda/push_event.rs"
