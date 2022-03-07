@@ -7,10 +7,28 @@ use domain::{
     repository::{DBRepository, GoogleRepository},
 };
 use lambda_http::{self, Error, Request, Response};
+use log::{error, info};
 use std::sync::Arc;
 use usecase::login_usecase;
 
 pub async fn login<G, U>(req: Request) -> Result<Response<String>, Error>
+where
+    G: GoogleRepository + 'static,
+    U: DBRepository + 'static,
+{
+    let ret = login_inner::<G, U>(req).await;
+    match &ret {
+        Ok(response) => {
+            info!("response: {}", response.body())
+        }
+        Err(err) => {
+            error!("error: {}", err)
+        }
+    }
+    ret
+}
+
+async fn login_inner<G, U>(req: Request) -> Result<Response<String>, Error>
 where
     G: GoogleRepository + 'static,
     U: DBRepository + 'static,
