@@ -1,13 +1,12 @@
 use crate::{
     domain::{LoginRequest, LoginResponse},
-    lambda_server::{parse_body, LambdaServerError},
+    lambda_server::{log_response, parse_body, LambdaServerError},
 };
 use domain::{
     model::value::{AppState, Code},
     repository::{DBRepository, GoogleRepository},
 };
 use lambda_http::{self, Error, Request, Response};
-use log::{error, info};
 use std::sync::Arc;
 use usecase::login_usecase;
 
@@ -17,14 +16,7 @@ where
     U: DBRepository + 'static,
 {
     let ret = login_inner::<G, U>(req).await;
-    match &ret {
-        Ok(response) => {
-            info!("response: {}", response.body())
-        }
-        Err(err) => {
-            error!("error: {}", err)
-        }
-    }
+    log_response(&ret);
     ret
 }
 
