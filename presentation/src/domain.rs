@@ -1,8 +1,10 @@
+use chrono::{DateTime, TimeZone, Utc};
+use chrono_tz::Asia::Tokyo;
 use domain::model::{
-    entity::{Calendar, TaskList},
-    value::{CalendarId, Code, TaskListId, UserConfig, UserId},
+    entity::{Calendar, Task, TaskList},
+    value::{CalendarId, Code, Event, TaskListId, UserConfig, UserId},
 };
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct LoginRequest {
@@ -97,5 +99,36 @@ pub struct SuccessResponse {}
 impl SuccessResponse {
     pub fn new() -> Self {
         Self {}
+    }
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FrontEndEvent {
+    task: Task,
+    #[serde(deserialize_with = "format_frontend_datetime")]
+    start_time: DateTime<Utc>,
+    #[serde(deserialize_with = "format_frontend_datetime")]
+    end_time: DateTime<Utc>,
+}
+
+fn format_frontend_datetime<'de, D>(deserializer: D) -> Result<DateTime<Utc>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let string_time: String = Deserialize::deserialize(deserializer)?;
+    let local = Tokyo
+        .datetime_from_str(&string_time, "%Y-%m-%d %H:%M:%S")
+        .map_err(serde::de::Error::custom)?;
+    Ok(local.with_timezone(&Utc))
+}
+
+impl From<FrontEndEvent> for Event {
+    fn from(raw: FrontEndEvent) -> Self {
+        Self {
+            task: raw.task,
+            start: raw.start_time,
+            end: raw.end_time,
+        }
     }
 }

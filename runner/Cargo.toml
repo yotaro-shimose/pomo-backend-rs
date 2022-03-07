@@ -43,3 +43,7 @@ path = "src/lambda/update_user_config.rs"
 [[bin]]
 name = "fetch_task"
 path = "src/lambda/fetch_task.rs"
+
+[[bin]]
+name = "push_event"
+path = "src/lambda/push_event.rs"

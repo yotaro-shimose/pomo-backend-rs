@@ -11,6 +11,7 @@ usecase = { path = "../usecase" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1"
 chrono = { version = "0.4", features = ["serde"] }
+chrono-tz = { version = "0.4", features = ["serde"] }
 actix-cors = "0.6.0-beta.1"
 env_logger = "0.9"
 actix-web = "4.0.0-rc.2"
